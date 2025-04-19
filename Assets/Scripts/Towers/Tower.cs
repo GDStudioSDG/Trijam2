@@ -5,6 +5,7 @@ namespace Towers
 {
     public class Tower : MonoBehaviour
     {
+        [SerializeField]private int towerDamage = 10;
         private float _radius;
         private Transform _transform;
         private SphereCollider _sphere;
@@ -18,6 +19,14 @@ namespace Towers
             _radius = _sphere.radius;
         }
 
+        private void Update()
+        {
+            if (Input.GetKey(KeyCode.E))
+            {
+                Debug.Log("Press");
+                CauseDamage();
+            }
+        }
         private void FixedUpdate()
         {
             if (_lockedEnemy)
@@ -40,6 +49,7 @@ namespace Towers
         {
             if (other.gameObject == _lockedEnemy)
             {
+                
                 Unlock();
             }
         }
@@ -71,6 +81,13 @@ namespace Towers
             }
         }
 
-        
+        private void CauseDamage()
+        {
+            if (_lockedEnemy.GetComponent<Enemy>())
+            {
+                _lockedEnemy.GetComponent<Enemy>().GetDamage(towerDamage);
+                Debug.Log("Damaged");
+            }
+        }
     }
 }
