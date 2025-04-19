@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-
 namespace Towers
 {
     public class Tower : MonoBehaviour
@@ -19,14 +18,7 @@ namespace Towers
             _radius = _sphere.radius;
         }
 
-        private void Update()
-        {
-            if (Input.GetKey(KeyCode.E))
-            {
-                Debug.Log("Press");
-                CauseDamage();
-            }
-        }
+
         private void FixedUpdate()
         {
             if (_lockedEnemy)
@@ -34,14 +26,17 @@ namespace Towers
                 var targetRotation = Quaternion.LookRotation(_lockedEnemy.transform.position - transform.position);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
+            else
+            {
+                Unlock();
+            }
         }
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Enemy") && !_bIsLocked)
             {
-                _bIsLocked = true;
-                _lockedEnemy = other.gameObject;
+                Lock(other.gameObject);
             }
         }
 
@@ -49,30 +44,34 @@ namespace Towers
         {
             if (other.gameObject == _lockedEnemy)
             {
-                
                 Unlock();
             }
+        }
+
+        private void Lock(GameObject otherGameObject)
+        {
+            _bIsLocked = true;
+            _lockedEnemy = otherGameObject;
         }
         public void Unlock()
         {
             float minDistance = float.MaxValue;
             GameObject nextEnemy = null;
             Collider[] allOverlappingColliders = Physics.OverlapSphere(_sphere.transform.localPosition, _radius);
-            
-            foreach (Collider c in allOverlappingColliders)
-            {
-                if(!c.gameObject.CompareTag("Enemy")) continue;
-                float distance = (c.transform.position - _transform.position).magnitude;
-                if (minDistance > distance)
+            if(allOverlappingColliders.Length > 0)
+                foreach (Collider c in allOverlappingColliders)
                 {
-                    minDistance = distance;
-                    nextEnemy = c.gameObject;
+                    if(!c.gameObject.CompareTag("Enemy")) continue;
+                    float distance = (c.transform.position - _transform.position).magnitude;
+                    if (minDistance > distance)
+                    {
+                        minDistance = distance;
+                        nextEnemy = c.gameObject;
+                    }
                 }
-            }
             if (nextEnemy)
             {
-                _bIsLocked = true;
-                _lockedEnemy = nextEnemy.gameObject;
+                Lock(nextEnemy.gameObject);
             }
             else
             {
@@ -81,13 +80,18 @@ namespace Towers
             }
         }
 
-        private void CauseDamage()
+        protected void CauseDamage()
         {
-            if (_lockedEnemy.GetComponent<Enemy>())
+            if (_lockedEnemy)
             {
-                _lockedEnemy.GetComponent<Enemy>().GetDamage(towerDamage);
+                _lockedEnemy.GetComponent<ITowerInteract>().TakeDamage(towerDamage);
                 Debug.Log("Damaged");
             }
+        }
+
+        public GameObject GetLockedEnemy()
+        {
+            return _lockedEnemy;
         }
     }
 }

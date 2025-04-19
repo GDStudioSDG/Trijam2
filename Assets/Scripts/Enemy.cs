@@ -3,10 +3,9 @@ using Towers;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, ITowerInteract
 {
-    int Hp=10;
-    private List<Tower> _aggredTowers;
+    [SerializeField] int Hp=10;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,29 +14,17 @@ public class Enemy : MonoBehaviour
 
     void Dead()
     {
-        foreach (Tower tower in _aggredTowers)
-        {
-            tower.Unlock();
-        }
         print("Blia I sdoh");
+        Destroy(gameObject);
     }
 
-    public void GetDamage(int Damage)
+    public void TakeDamage(int damage)
     {
-        if(Hp-Damage <= 0)
+        if(Hp-damage <= 0)
         {
             Dead();
         }
-        else Hp -= Damage;
+        else Hp -= damage;
     }
-
-    public void AddTowers(Tower tower)
-    {
-        if (tower) _aggredTowers.Add(tower);
-    }
-
-    public void RemoveTowers(Tower tower)
-    {
-        _aggredTowers.Remove(tower);
-    }
+    
 }
