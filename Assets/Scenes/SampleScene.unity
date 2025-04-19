@@ -716,7 +716,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1136747847}
         m_TargetAssemblyTypeName: TurnManager, Assembly-CSharp
         m_MethodName: GameStart
         m_Mode: 3
