@@ -10,6 +10,7 @@ namespace Towers
         private SphereCollider _sphere;
         private bool _bIsLocked = false;
         private GameObject _lockedEnemy;
+        [SerializeField]private float rotationSpeed = 5;
         private void Start()
         {
             _transform = gameObject.GetComponent<Transform>();
@@ -19,7 +20,11 @@ namespace Towers
 
         private void FixedUpdate()
         {
-            if( _lockedEnemy) _transform.LookAt(_lockedEnemy.transform);
+            if (_lockedEnemy)
+            {
+                var targetRotation = Quaternion.LookRotation(_lockedEnemy.transform.position - transform.position);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
         }
 
         private void OnTriggerEnter(Collider other)
@@ -36,17 +41,34 @@ namespace Towers
             if (other.gameObject == _lockedEnemy)
             {
                 Unlock();
-                Collider[] allOverlappingColliders = Physics.OverlapSphere(_sphere.transform.localPosition, _radius);
-                foreach (Collider c in allOverlappingColliders)
-                {
-                    Debug.Log(c.name);
-                }
             }
         }
         public void Unlock()
         {
-            _bIsLocked = false;
-            _lockedEnemy = null;
+            float minDistance = float.MaxValue;
+            GameObject nextEnemy = null;
+            Collider[] allOverlappingColliders = Physics.OverlapSphere(_sphere.transform.localPosition, _radius);
+            
+            foreach (Collider c in allOverlappingColliders)
+            {
+                if(!c.gameObject.CompareTag("Enemy")) continue;
+                float distance = (c.transform.position - _transform.position).magnitude;
+                if (minDistance > distance)
+                {
+                    minDistance = distance;
+                    nextEnemy = c.gameObject;
+                }
+            }
+            if (nextEnemy)
+            {
+                _bIsLocked = true;
+                _lockedEnemy = nextEnemy.gameObject;
+            }
+            else
+            {
+                _bIsLocked = false;
+                _lockedEnemy = null;
+            }
         }
 
         
