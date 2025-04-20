@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Splines;
+using System.Collections;
 
 public class move : MonoBehaviour
 {
@@ -10,13 +11,19 @@ public class move : MonoBehaviour
     [SerializeField]private SplineAnimate Anim;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     float FT = 0;
+    Coroutine coroutine = null;
     void Start()
     {
         Anim.MaxSpeed = Speed;
         NSpeed = Speed;
     }
 
-   void SetSpeed(float SpeedIn)
+    IEnumerator Slow(float sec)
+    {
+
+        yield return new WaitForSeconds(sec);
+    }
+    void SetSpeed(float SpeedIn)
     {
         k = 0;
         Speed = SpeedIn;
@@ -26,6 +33,16 @@ public class move : MonoBehaviour
         Speed = SpeedIn;
         k = 0;
         koeff = kIn;
+    }
+
+    public void TakeSlow(float sec)
+    {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
+        coroutine = StartCoroutine(Slow(sec));
     }
     // Update is called once per frame
     void FixedUpdate()
