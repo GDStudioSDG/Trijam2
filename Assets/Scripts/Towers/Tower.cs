@@ -7,9 +7,13 @@ namespace Towers
 {
     public class Tower : MonoBehaviour
     {
+        protected int level = 1;
+        protected int energy = 10;
         protected virtual Type damageType { get; set; } = Type.None;
-        [SerializeField] protected float attackSpeed = 1;
-        [SerializeField]protected int towerDamage = 10;
+        [SerializeField] protected float defaultAttackSpeed = 1;
+        private float attackSpeed = 1;
+        [SerializeField]protected int defaultTowerDamage = 10;
+        private int towerDamage = 10;
         protected float _radius;
         private Transform _transform;
         private SphereCollider _sphere;
@@ -18,12 +22,13 @@ namespace Towers
         [SerializeField]private float rotationSpeed = 5;
         private void Start()
         {
+            CheckLevel();
             _transform = gameObject.GetComponent<Transform>();
             _sphere = gameObject.GetComponent<SphereCollider>();
             _radius = _sphere.radius;
         }
 
-
+    
         private void FixedUpdate()
         {
             if (_lockedEnemy)
@@ -37,6 +42,47 @@ namespace Towers
             }
         }
 
+        public void SetLevel(int towerLevel)
+        {
+            level = towerLevel;
+            CheckLevel();
+        }
+
+        public int  GetEnergy()
+        {
+            return energy;
+        }
+        private void CheckLevel()
+        {
+            switch (level)
+            {
+                case 1: energy = 10;
+                    towerDamage = defaultTowerDamage;
+                    attackSpeed = defaultAttackSpeed;
+                    break;
+                case 2: energy = 20;
+                    towerDamage = defaultTowerDamage * 2;
+                    attackSpeed = defaultAttackSpeed * 0.75f; 
+                    break;
+                case 3: energy = 30; 
+                    towerDamage = defaultTowerDamage * 3;
+                    attackSpeed = defaultAttackSpeed * 0.5f;
+                    break;
+                default:
+                    if (level < 1)
+                    {
+                        level = 1;
+                        CheckLevel();
+                    }
+                    else
+                    {
+                        level = 3;
+                        CheckLevel();
+                    }
+
+            break;
+            }
+        }
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Enemy") && !_bIsLocked)
