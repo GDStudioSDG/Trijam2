@@ -42,27 +42,31 @@ namespace Towers
 
         private void MakeChain(GameObject target)
         {
-            List<GameObject> shockedEnemes = new List<GameObject>();
-            CauseDamage(target);
-            shockedEnemes.Add(target);
-            for (int i = 0; i < chainCount; i++)
+            if (target != null)
             {
-                bool shocked = false;
-                Collider[] allOverlappingColliders = Physics.OverlapSphere(target.transform.localPosition, shokRaius);
-                if (allOverlappingColliders.Length > 0)
+                List<GameObject> shockedEnemes = new List<GameObject>();
+                Vector3 localPos = target.transform.localPosition;
+                CauseDamage(target);
+                shockedEnemes.Add(target);
+                for (int i = 0; i < chainCount; i++)
                 {
-                    foreach (var enemyCollider in allOverlappingColliders)
+                    bool shocked = false;
+                    Collider[] allOverlappingColliders = Physics.OverlapSphere(localPos, shokRaius);
+                    if (allOverlappingColliders.Length > 0)
                     {
-                        if (enemyCollider.CompareTag("Enemy") && !shockedEnemes.Contains(enemyCollider.gameObject))
+                        foreach (var enemyCollider in allOverlappingColliders)
                         {
-                            CauseDamage(enemyCollider.gameObject);
-                            shockedEnemes.Add(enemyCollider.gameObject);
-                            shocked = true;
-                            break;
+                            if (enemyCollider.CompareTag("Enemy") && !shockedEnemes.Contains(enemyCollider.gameObject))
+                            {
+                                CauseDamage(enemyCollider.gameObject);
+                                shockedEnemes.Add(enemyCollider.gameObject);
+                                shocked = true;
+                                break;
+                            }
                         }
                     }
+                    if (!shocked) break;
                 }
-                if(!shocked) break;
             }
         } 
     }
