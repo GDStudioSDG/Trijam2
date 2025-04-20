@@ -6,21 +6,26 @@ public class move : MonoBehaviour
     [SerializeField] private float Speed = 10;
     private float NSpeed = 10;
     [SerializeField] float k = 0;
+    float koeff = 0.05f;
     [SerializeField]private SplineAnimate Anim;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     float FT = 0;
     void Start()
     {
         Anim.MaxSpeed = Speed;
+        NSpeed = Speed;
     }
 
-   void SetSpeed(float Speed)
+   void SetSpeed(float SpeedIn)
     {
-
+        k = 0;
+        Speed = SpeedIn;
     }
-    void SetSpeed(float Speed, float k)
+    void SetSpeed(float SpeedIn, float kIn)
     {
-
+        Speed = SpeedIn;
+        k = 0;
+        koeff = kIn;
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -29,8 +34,8 @@ public class move : MonoBehaviour
         //FT = Anim.ElapsedTime;
         //print(N);
         if (k != 1)
-        k += 0.05f;
-        Anim.MaxSpeed =Mathf.Lerp(10, 1,k);
+        k += koeff;
+        Anim.MaxSpeed =Mathf.Lerp(NSpeed, Speed, k);
         Anim.NormalizedTime = N;
         //print(Anim.ElapsedTime = FT * Anim.ElapsedTime);
     }
