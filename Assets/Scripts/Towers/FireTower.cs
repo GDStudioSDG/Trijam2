@@ -7,6 +7,7 @@ namespace Towers
 {
     public class FireTower : Tower
     {
+        private Coroutine coroutine = null;
         protected override Type damageType{ get; set; } = Type.Fire;
         [SerializeField]private GameObject fire;
         [SerializeField] private int fireTimer = 3;
@@ -18,7 +19,12 @@ namespace Towers
         {
             
             bIsFiring = true;
-            StartCoroutine(FireTimer());
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+                coroutine = null;
+            }
+            coroutine = StartCoroutine(FireTimer());
         }
 
         protected override void Atack()  

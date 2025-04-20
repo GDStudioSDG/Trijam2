@@ -47,6 +47,10 @@ namespace Towers
             level = towerLevel;
             CheckLevel();
         }
+        public int GetLevel()
+        {
+            return level;
+        }
 
         public int  GetEnergy()
         {
@@ -146,7 +150,7 @@ namespace Towers
             if (other)
             {
                 other.GetComponent<ITowerInteract>().TakeDamage(towerDamage, damageType);
-                Debug.Log("Damaged");
+                //Debug.Log("Damaged");
             }
         }
 

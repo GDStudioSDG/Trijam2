@@ -8,7 +8,7 @@ public class EnemyShedule : MonoBehaviour
 {
     [SerializeField] List<SplineContainer> Splines;
     [SerializeField] GameObject PEnemy;
-    [SerializeField] int Time = 0;
+    [SerializeField] static int Time = 0;
     int RandomLine;
     bool[] LinesActive = new bool[4];
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,11 +26,15 @@ public class EnemyShedule : MonoBehaviour
             return RandNum;
         }
     }
+    public static int GetTime()
+    {
+        return Time;
+    }
     IEnumerator Tik()
     {
         while (true)
         {
-            print(Time);
+            //print(Time);
             if (Time == 0)
             {
                 RandomVichet();
@@ -58,6 +62,8 @@ public class EnemyShedule : MonoBehaviour
                         Enemy.GetComponent<SplineAnimate>().Container = Splines[i];
                         //print(Random.Range(0, 4));
                         Enemy.GetComponent<SplineAnimate>().Play();
+                        int RandType = Random.Range(0, 4);
+                        Enemy.GetComponent<Enemy>().SetEnemyType((Type)RandType);
                     }
                     i++;
                 }  

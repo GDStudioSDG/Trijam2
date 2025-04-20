@@ -8,15 +8,16 @@ public class Enemy : MonoBehaviour, ITowerInteract
 {
     [SerializeField]protected Type enemyType = Type.Earth;
     [SerializeField] int Hp=10;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+
+    public void SetEnemyType(Type type)
     {
-        
+        enemyType = type;
     }
 
     void Dead()
     {
-        print("Blia I sdoh");
+        //print("Blia I sdoh");
         Destroy(gameObject);
     }
 

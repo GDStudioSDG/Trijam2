@@ -27,17 +27,21 @@ namespace Towers
 
         private IEnumerator ProjectileFly(GameObject projectile)
         {
+            Vector3 targetPos = Vector3.zero;
             GameObject target = GetLockedEnemy();
-            Vector3 targetPos =  target.transform.position;
-            while (Vector3.Distance(targetPos, projectile.transform.position) > 0.3f && target != null)
+            if (target != null)
             {
-                targetPos =  target.transform.position;
-                projectile.transform.position += (targetPos - projectile.transform.position).normalized *  Time.deltaTime * projectileSpeed;
-                projectile.transform.LookAt(targetPos);
-                yield return null;
+                targetPos = target.transform.position;
+                while (Vector3.Distance(targetPos, projectile.transform.position) > 0.3f && target != null)
+                {
+                    targetPos = target.transform.position;
+                    projectile.transform.position += (targetPos - projectile.transform.position).normalized * Time.deltaTime * projectileSpeed;
+                    projectile.transform.LookAt(targetPos);
+                    yield return null;
+                }
+                MakeChain(target);
+                Destroy(projectile);
             }
-            MakeChain(target);
-            Destroy(projectile);
         }
 
         private void MakeChain(GameObject target)

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 3584cc7d90e93a64184ef543b13e63cf
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - cam: {instanceID: 0}
+  - Place: {instanceID: 0}
+  - TowerW: {fileID: 4127854123138056864, guid: 6b69799af03231e4f9fcf4b7409c1d04, type: 3}
+  - TowerG: {fileID: 2315856227007880262, guid: 6070469607b7a9b46b3660afb5a8e265, type: 3}
+  - TowerL: {fileID: 7757969931363896702, guid: 5449fa6ccafca4346b17e8b6a48a0194, type: 3}
+  - TowerF: {fileID: 108516598008958054, guid: 6427eddcbd0532044915385273f6cb5e, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
