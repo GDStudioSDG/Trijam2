@@ -7,12 +7,18 @@ namespace Towers
 {
     public class EarthTower : Tower
     {
+        protected override Type damageType{ get; set; } = Type.Earth;
         [SerializeField]private GameObject rock;
         [SerializeField]private float projectileSpeed = 2f;
         private void RockShot()
         {
             GameObject shot = Instantiate(rock, transform.position + transform.forward, Quaternion.identity);
             StartCoroutine(ProjectileFly(shot));
+        }
+
+        protected override void Atack()  
+        {
+            RockShot();
         }
         
 
@@ -28,15 +34,8 @@ namespace Towers
                 yield return null;
             }
 
-            CauseDamage();
+            CauseDamage(target);
             Destroy(projectile);
-        }
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                RockShot();
-            }
         }
     }
 }

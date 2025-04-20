@@ -1,11 +1,16 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem.Layouts;
+
 namespace Towers
 {
     public class Tower : MonoBehaviour
     {
-        [SerializeField]private int towerDamage = 10;
-        private float _radius;
+        protected virtual Type damageType { get; set; } = Type.None;
+        [SerializeField] protected float attackSpeed = 1;
+        [SerializeField]protected int towerDamage = 10;
+        protected float _radius;
         private Transform _transform;
         private SphereCollider _sphere;
         private bool _bIsLocked = false;
@@ -52,6 +57,7 @@ namespace Towers
         {
             _bIsLocked = true;
             _lockedEnemy = otherGameObject;
+            StartCoroutine(AutoAtackCourotine());
         }
         public void Unlock()
         {
@@ -84,14 +90,36 @@ namespace Towers
         {
             if (_lockedEnemy)
             {
-                _lockedEnemy.GetComponent<ITowerInteract>().TakeDamage(towerDamage);
+                _lockedEnemy.GetComponent<ITowerInteract>().TakeDamage(towerDamage, damageType);
                 Debug.Log("Damaged");
             }
         }
 
-        public GameObject GetLockedEnemy()
+        protected void CauseDamage(GameObject other)
+        {
+            if (other)
+            {
+                other.GetComponent<ITowerInteract>().TakeDamage(towerDamage, damageType);
+                Debug.Log("Damaged");
+            }
+        }
+
+        protected GameObject GetLockedEnemy()
         {
             return _lockedEnemy;
+        }
+
+        protected virtual void Atack()
+        {
+            
+        }
+        private IEnumerator AutoAtackCourotine()
+        {
+            while (_bIsLocked)
+            {
+                Atack();
+                yield return new WaitForSeconds(1 / attackSpeed);
+            }
         }
     }
 }

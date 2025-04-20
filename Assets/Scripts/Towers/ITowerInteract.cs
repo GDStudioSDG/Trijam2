@@ -4,6 +4,6 @@ namespace Towers
 {
    public interface ITowerInteract
    {
-      void TakeDamage(int damage);
+      void TakeDamage(int damage, Type damageType);
    }
 }
