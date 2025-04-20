@@ -8,6 +8,7 @@ TagManager:
   - 2
   - Player1
   - Enemy
+  - HidenUI
   layers:
   - Default
   - TransparentFX
